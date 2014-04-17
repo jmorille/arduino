@@ -20,6 +20,8 @@ import android.util.Log;
 import android.widget.TextView;
 
 public class NFCCreditCardToolActivity extends Activity {
+
+    private static final String TAG = "NFCCreditCardToolActivity";
 	private static final int DIALOG_NFC_OFF = 1;
 	private NfcAdapter mAdapter;
 	private PendingIntent pendingIntent;
@@ -83,7 +85,7 @@ public class NFCCreditCardToolActivity extends Activity {
 			try {
 				myTag.connect();
 			} catch (IOException e) {
-				e.printStackTrace();
+                Log.e(TAG, "Error Nfc connect : " + e.getMessage(), e);
 				return;
 			}
         }
@@ -94,7 +96,7 @@ public class NFCCreditCardToolActivity extends Activity {
 			response = myTag.transceive(selectCommand);
 			tv1.setText("ATS received");
 		} catch (IOException e) {
-			e.printStackTrace();
+            Log.e(TAG, "Error Nfc response : " + e.getMessage(), e);
 			return;
 		}
         byte readRecord[] = {0x00,(byte) 0xB2,0x02,0x0C,0x00};
@@ -103,7 +105,7 @@ public class NFCCreditCardToolActivity extends Activity {
 			ParseGeneralInfo pgi = new ParseGeneralInfo(response);
 			tv1.setText(pgi.cardholdername+"\n"+pgi.pan+"\n"+pgi.expirydate+"\n");
 		} catch (IOException e) {
-			e.printStackTrace();
+            Log.e(TAG, "Error Nfc read record : " + e.getMessage(), e);
 			return;
 		}
         byte readPayLog[] = {0x00,(byte) 0xB2,0x01,(byte) 0x8C,0x00};
@@ -114,7 +116,7 @@ public class NFCCreditCardToolActivity extends Activity {
 				ParseLogInfo pli = new ParseLogInfo(response);
 				tv1.setText(tv1.getText()+"\n"+pli.res);
 			} catch (IOException e) {
-				e.printStackTrace();
+                Log.e(TAG, "Error Nfc read pay log : " + e.getMessage(), e);
 				return;
 			}
         }

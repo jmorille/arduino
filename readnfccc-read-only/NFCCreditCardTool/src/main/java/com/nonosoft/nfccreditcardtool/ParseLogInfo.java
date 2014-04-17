@@ -37,7 +37,7 @@ public class ParseLogInfo {
 			this.res+=(data[14]==0 ? " Payment" : " Withdrawal");
 			// Amount
 			String siamount = String.format("%02x%02x%02x", data[2],data[3],data[4]);
-			this.res+=" "+(new Integer(siamount).intValue())+","+String.format("%02x", data[5])+"€";
+			this.res+=" "+( Integer.valueOf(siamount).intValue())+","+String.format("%02x", data[5])+"€";
 		}
 	}
 }
