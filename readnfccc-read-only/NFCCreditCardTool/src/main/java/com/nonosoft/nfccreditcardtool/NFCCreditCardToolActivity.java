@@ -19,6 +19,10 @@ import android.nfc.tech.IsoDep;
 import android.util.Log;
 import android.widget.TextView;
 
+/**
+ * Source https://code.google.com/p/readnfccc/source/checkout
+ *
+ */
 public class NFCCreditCardToolActivity extends Activity {
 
     private static final String TAG = "NFCCreditCardToolActivity";
@@ -86,6 +90,7 @@ public class NFCCreditCardToolActivity extends Activity {
 				myTag.connect();
 			} catch (IOException e) {
                 Log.e(TAG, "Error Nfc connect : " + e.getMessage(), e);
+                tv1.setText( "Error Nfc connect : " + e.getMessage());
 				return;
 			}
         }
