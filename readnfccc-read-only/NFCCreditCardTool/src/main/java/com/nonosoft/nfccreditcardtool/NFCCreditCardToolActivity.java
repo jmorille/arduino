@@ -33,13 +33,19 @@ public class NFCCreditCardToolActivity extends Activity {
 	private IntentFilter[] mFilters;
 	
 	TextView tv1;
-	
+    TextView tv2;
+    TextView tv3;
+    TextView tv4;
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         tv1 = (TextView) findViewById(R.id.tv1);
+        tv2 = (TextView) findViewById(R.id.tv2);
+        tv3 = (TextView) findViewById(R.id.tv3);
+        tv4 = (TextView) findViewById(R.id.tv4);
         tv1.setText("Waiting for card...");
         
         mAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -99,18 +105,20 @@ public class NFCCreditCardToolActivity extends Activity {
         byte response[] = new byte[100];
         try {
 			response = myTag.transceive(selectCommand);
-			tv1.setText("ATS received");
+			tv2.setText("ATS received");
 		} catch (IOException e) {
-            Log.e(TAG, "Error Nfc response : " + e.getMessage(), e);
+            Log.e(TAG, "Error ATS response : " + e.getMessage(), e);
+            tv2.setText("Error ATS received : "  );
 			return;
 		}
         byte readRecord[] = {0x00,(byte) 0xB2,0x02,0x0C,0x00};
         try {
 			response = myTag.transceive(readRecord);
 			ParseGeneralInfo pgi = new ParseGeneralInfo(response);
-			tv1.setText(pgi.cardholdername+"\n"+pgi.pan+"\n"+pgi.expirydate+"\n");
+			tv3.setText(pgi.cardholdername+"\n"+pgi.pan+"\n"+pgi.expirydate+"\n");
 		} catch (IOException e) {
-            Log.e(TAG, "Error Nfc read record : " + e.getMessage(), e);
+            Log.e(TAG, "Error Nfc read record : " , e);
+            tv3.setText("Error Nfc read record : "  );
 			return;
 		}
         byte readPayLog[] = {0x00,(byte) 0xB2,0x01,(byte) 0x8C,0x00};
@@ -119,10 +127,12 @@ public class NFCCreditCardToolActivity extends Activity {
 	        try {
 				response = myTag.transceive(readPayLog);
 				ParseLogInfo pli = new ParseLogInfo(response);
-				tv1.setText(tv1.getText()+"\n"+pli.res);
+				tv4.setText( pli.res);
 			} catch (IOException e) {
-                Log.e(TAG, "Error Nfc read pay log : " + e.getMessage(), e);
-				return;
+                Log.e(TAG, "Error Nfc read pay log : " , e);
+                tv4.setText("Error Nfc read pay log : "  );
+
+                return;
 			}
         }
     }
